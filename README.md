@@ -127,6 +127,13 @@ However, **ARIMA produced worse results than Prophet**, so Prophet was chosen fo
 
 ---
 ## 📦 Installation
+
+## Clone the Repository
+
+```bash
+git clone https://github.com/esramogulkoc-dev/portfolio-forecasting
+cd portfolio-forecasting
+
 ```bash
 pip install streamlit yfinance prophet scikit-learn scipy pandas numpy matplotlib pypfopt xgboost statsmodels
 
