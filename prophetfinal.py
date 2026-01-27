@@ -330,7 +330,14 @@ weights_df = pd.DataFrame({
 
 # 3) Portfolio weights table
 st.subheader("⚖️ Portfolio Weights")
-st.dataframe(weights_df.style.background_gradient(cmap="RdYlGn", axis=1))
+st.dataframe(
+    weights_df
+    .round(1)
+    .style
+    .format("{:.1f}%")
+    .background_gradient(cmap="RdYlGn", axis=1)
+)
+
 
 # =============================
 # CUMULATIVE RETURNS
@@ -346,7 +353,7 @@ cum_fc_2026 = cum_fc_2026 * cum_real_end_2025
 
 fig, ax = plt.subplots(figsize=(12,6))
 ax.plot(cum_roll_fc, label="Forecast Portfolio (2024-2025 Rolling)", linewidth=2)
-ax.plot(cum_real, label="Realized Portfolio (2024-2025)", linewidth=2, linestyle="--")
+ax.plot(cum_real, label="Historical Portfolio (2024-2025)", linewidth=2, linestyle="--")
 ax.plot(cum_fc_2026, label=f"Forecast Portfolio (2026 + {horizon_months}m)", linewidth=2, linestyle=":")
 ax.legend()
 ax.grid(alpha=0.3)
@@ -359,7 +366,7 @@ st.pyplot(fig)
 ann_factor = 252
 
 metrics_df = pd.DataFrame({
-    "Portfolio": ["Historical", "Forecast 2024-2025", "Realized 2024-2025", "Forecast 2026"],
+    "Portfolio": ["Historical", "Forecast 2024-2025", "Historical 2024-2025", "Forecast 2026"],
     "Annual Return (%)": [
         np.sum(mu_hist * w_hist) * ann_factor * 100,
         np.sum(mu_roll_fc * w_roll_fc) * ann_factor * 100,
