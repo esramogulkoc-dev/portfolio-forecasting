@@ -1,17 +1,20 @@
-📈 AI Portfolio Optimizer – Prophet
+# 📈 AI Portfolio Optimizer – Prophet
 
-🌟 Quick Overview (STAR Method)
-Situation: Financial markets require both precise price prediction and robust risk management strategies.
+## 🌟 Quick Overview (STAR Method)
 
-Task: Develop a dual-track project to evaluate multiple forecasting models and apply them to real-world portfolio optimization.
+**Situation:** Financial markets require both precise price prediction and robust risk management strategies.  
 
-Action: Benchmarked ARIMA, Prophet, and XGBoost for price forecasting. Implemented a rolling Prophet model within a Streamlit dashboard to optimize Sharpe-ratio-based portfolios.
+**Task:** Develop a dual-track project to evaluate multiple forecasting models and apply them to real-world portfolio optimization.  
 
-Result: Identified XGBoost as the leader for raw price accuracy, while Prophet provided the most stable return distributions for portfolio allocation.
-...
+**Action:** Benchmarked ARIMA, Prophet, and XGBoost for price forecasting. Implemented a rolling Prophet model within a Streamlit dashboard to optimize Sharpe-ratio-based portfolios.  
 
-📂 Project Structure
+**Result:** Identified XGBoost as the leader for raw price accuracy, while Prophet provided the most stable return distributions for portfolio allocation.  
 
+---
+
+## 📂 Project Structure
+
+```text
 portfolio-forecasting/
 ├── price_prediction_models/    # PART A: Raw Price Forecasting Research
 │   ├── arimastockprice.ipynb   # ARIMA Experimentation
@@ -24,62 +27,53 @@ portfolio-forecasting/
 │   └── stockdate.csv           # Historical Stock Price Data
 ├── requirements.txt            # Project Dependencies
 └── README.md                   # Documentation
-...
 
-💡 Key Insights
-Dual-Track Evaluation: This project demonstrates that the best model for point-in-time price prediction (XGBoost) may differ from the best model for capturing return distributions for optimization (Prophet).
 
-Rolling Forecast (2024-2025): The model retrains every month, simulating a professional environment where strategies are updated as new data becomes available.
+---
 
-Diversification Guardrails: Individual asset weights are capped between 1% and 40% to prevent extreme concentration risk.
+## 💡 Key Insights
 
-Risk Management: Focuses on Sortino Ratio and Max Drawdown to measure downside protection and "pain-adjusted" returns.
-...
+- **Dual-Track Evaluation:** Best model for point-in-time price prediction (XGBoost) may differ from the best model for capturing return distributions for optimization (Prophet).  
+- **Rolling Forecast (2024-2025):** Retrains every month, simulating a professional environment with updated strategies.  
+- **Diversification Guardrails:** Asset weights capped between 1% and 40% to prevent concentration risk.  
+- **Risk Management:** Focus on Sortino Ratio and Max Drawdown to measure downside protection.
 
-🧠 How It Works
+---
 
-1️⃣ Part A: Price Forecasting Models (/price_prediction_models)
-We evaluated raw price prediction accuracy across three distinct architectures:
+## 🧠 How It Works
 
-ARIMA: Traditional statistical baseline for time-series.
+### 1️⃣ Part A: Price Forecasting Models (`/price_prediction_models`)
 
-Prophet: Specialist in handling seasonality and market changepoints.
+- **ARIMA:** Traditional statistical baseline for time-series.  
+- **Prophet:** Specialist in handling seasonality and market changepoints.  
+- **XGBoost:** Winner for Price Accuracy — lowest RMSE/MAPE for direct price forecasting.
 
-XGBoost: Winner for Price Accuracy. Delivered the lowest error rates (RMSE/MAPE) for direct price forecasting.
+### 2️⃣ Part B: Forecasting for Portfolio Optimization (`/portfolio_forecasting`)
 
-2️⃣ Part B: Forecasting for Portfolio Optimization (/portfolio_forecasting)
-This track focuses on generating expected returns (mu) and risk matrices (cov):
+- **Prophet:** Winner for Optimization — provides stable return distributions for Mean-Variance Optimization.  
+- **ARIMA (Final):** Alternative implementation for benchmarking.  
+- **2026 Projection:** Long-term projection from the end of 2025 using the last known market prices.
 
-Prophet: Winner for Optimization. Provides stable return distributions essential for Mean-Variance Optimization.
+### 3️⃣ Portfolio Optimization Engine
 
-Arima (Final): Alternative implementation for comparative benchmarking.
+- **Historical-based:** Optimal allocation using 2016–2023 data.  
+- **Forecast-based:** AI-predicted allocation for the future.  
+- **Realized:** Benchmarking against actual 2024–2025 market performance.
 
-2026 Projection: Long-term projection starting from the end of 2025 using the last known market prices.
+---
 
-3️⃣ Portfolio Optimization Engine
-Comparing three distinct strategies:
+## 📌 Features
 
-Historical-based: Optimal allocation using 2016-2023 data.
+- ✅ Interactive Dashboards: Dynamic ticker selection & forecast horizon sliders.  
+- ✅ Comparative Frontiers: Visual Efficient Frontier analysis across time windows.  
+- ✅ Accuracy Tracking: Live RMSE & MAPE metrics for forecast validation.  
+- ✅ Live Apps: Accessible via Streamlit Cloud for real-time interaction.
 
-Forecast-based: AI-predicted allocation for the future.
+---
 
-Realized: Benchmarking against actual 2024-2025 market performance.
+## 📦 Installation & Run
 
-...
-
-📌 Features
-✔ Interactive Dashboards: Dynamic ticker selection and forecast horizon sliders.
-
-✔ Comparative Frontiers: Visual Efficient Frontier analysis across different time windows.
-
-✔ Accuracy Tracking: Live RMSE and MAPE metrics for forecast validation.
-
-✔ Live Apps: Accessible via Streamlit Cloud for real-time interaction.
-
-...
-
-📦 Installation & Run
-Bash
+```bash
 # Clone the repository
 git clone https://github.com/esramogulkoc-dev/portfolio-forecasting
 cd portfolio-forecasting
@@ -91,4 +85,4 @@ pip install -r requirements.txt
 streamlit run prophetfinal.py
 
 # Run the ARIMA Optimizer (Alternative)
-streamlit arimafinal.py
+streamlit run arimafinal.py
