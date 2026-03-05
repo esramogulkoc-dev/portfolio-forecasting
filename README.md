@@ -1,142 +1,94 @@
-# Portfolio Forecasting and Optimization – AI Portfolio Optimizer (Prophet)
+📈 AI Portfolio Optimizer – Prophet
 
-This repository contains a Streamlit-based web app that simulates a case study in financial engineering.  
-The app combines time series forecasting and portfolio optimization to compare:
+🌟 Quick Overview (STAR Method)
+Situation: Financial markets require both precise price prediction and robust risk management strategies.
 
-- **Historical-based optimal portfolio**
-- **Forecast-based optimal portfolio**
-- **Realized optimal portfolio**
+Task: Develop a dual-track project to evaluate multiple forecasting models and apply them to real-world portfolio optimization.
 
----
+Action: Benchmarked ARIMA, Prophet, and XGBoost for price forecasting. Implemented a rolling Prophet model within a Streamlit dashboard to optimize Sharpe-ratio-based portfolios.
 
-## 🚀 Project Summary
+Result: Identified XGBoost as the leader for raw price accuracy, while Prophet provided the most stable return distributions for portfolio allocation.
+...
 
-In this project, we:
+📂 Project Structure
 
-1. Download historical stock prices from Yahoo Finance
-2. Forecast future prices using **Prophet**
-3. Convert prices into returns and compute risk metrics
-4. Optimize portfolio weights using **mean-variance optimization (Sharpe ratio maximization)**
-5. Compare results between historical, forecast, and realized periods
-
-This is a **learning project**, designed for educational purposes and not meant for real trading.
-
----
-
-## 📌 Features
-
-✔ Interactive UI (Streamlit)  
-✔ Rolling forecast for 2024–2025 (monthly retraining)  
-✔ One-time forecast for 2026  
-✔ Portfolio optimization using Sharpe ratio  
-✔ Efficient frontier visualization  
-✔ Accuracy metrics (RMSE, MAPE)  
-✔ Portfolio performance metrics (Return, Volatility, Sharpe, Sortino, Max Drawdown)
-
----
-
-## 📈 Data
-
-- **Source**: Yahoo Finance (`yfinance`)
-- **Assets**: US equities (e.g., AAPL, MSFT, TSLA, AMZN, GOOG)
-- **Price type**: Adjusted Close
-- **Frequency**: Daily (default)
-- **Date range**: Defined in the code (training and test periods)
-
----
-
-## 🧠 How It Works
-
-
-### 1. Forecasting Models for stock price prediction
-
-Project Structure
 portfolio-forecasting/
-│
-└── models/
-    ├── arimastockprice.ipynb
-    ├── prophetstockprice.ipynb
-    └── xgbooststockprice.ipynb
+├── price_prediction_models/    # PART A: Raw Price Forecasting Research
+│   ├── arimastockprice.ipynb   # ARIMA Experimentation
+│   ├── prophetstockprice.ipynb # Prophet Experimentation
+│   └── xgbooststockprice.ipynb # XGBoost Experimentation (Best Price Accuracy)
+├── portfolio_forecasting/      # PART B: Portfolio Optimization Apps
+│   ├── prophetfinal.py         # Main Streamlit App (Prophet Implementation)
+│   └── arimafinal.py           # Alternative Streamlit App (ARIMA Implementation)
+├── data/                       # Dataset Storage
+│   └── stockdate.csv           # Historical Stock Price Data
+├── requirements.txt            # Project Dependencies
+└── README.md                   # Documentation
+...
 
+💡 Key Insights
+Dual-Track Evaluation: This project demonstrates that the best model for point-in-time price prediction (XGBoost) may differ from the best model for capturing return distributions for optimization (Prophet).
 
-The project uses **three forecasting models**:
+Rolling Forecast (2024-2025): The model retrains every month, simulating a professional environment where strategies are updated as new data becomes available.
 
-1. **ARIMA**
-2. **Prophet**
-3. **XGBoost**
+Diversification Guardrails: Individual asset weights are capped between 1% and 40% to prevent extreme concentration risk.
 
-After testing all three, **XGBoost produced the best forecasting accuracy**.
+Risk Management: Focuses on Sortino Ratio and Max Drawdown to measure downside protection and "pain-adjusted" returns.
+...
 
-### 1. Forecasting for portfolio optimization
+🧠 How It Works
 
-After testing all two, **Prophet produced the best forecasting accuracy for portfolio optimization**.
+1️⃣ Part A: Price Forecasting Models (/price_prediction_models)
+We evaluated raw price prediction accuracy across three distinct architectures:
 
-Project Structure
-portfolio-forecasting/
-├── 
-├── arimafinal.py
-├── prophetfinal.py
+ARIMA: Traditional statistical baseline for time-series.
 
-- **Rolling Forecast (2024–2025)**  
-  Prophet is retrained every month and forecasts the next month’s prices.
+Prophet: Specialist in handling seasonality and market changepoints.
 
-- **2026 Forecast**  
-  A one-time forecast is made using the last known price from 2025.
+XGBoost: Winner for Price Accuracy. Delivered the lowest error rates (RMSE/MAPE) for direct price forecasting.
 
-### 2. Portfolio Optimization
+2️⃣ Part B: Forecasting for Portfolio Optimization (/portfolio_forecasting)
+This track focuses on generating expected returns (mu) and risk matrices (cov):
 
-We compute:
+Prophet: Winner for Optimization. Provides stable return distributions essential for Mean-Variance Optimization.
 
-- Expected returns (`mu`)
-- Covariance matrix (`cov`)
+Arima (Final): Alternative implementation for comparative benchmarking.
 
-Then we maximize Sharpe ratio:
+2026 Projection: Long-term projection starting from the end of 2025 using the last known market prices.
 
-- Objective: maximize **(Expected Return / Volatility)**
-- Constraints:
-  - Each weight between 1% and 40%
-  - Total weights sum to 100%
+3️⃣ Portfolio Optimization Engine
+Comparing three distinct strategies:
 
----
+Historical-based: Optimal allocation using 2016-2023 data.
 
-## 🔍 Forecast Accuracy
+Forecast-based: AI-predicted allocation for the future.
 
-We evaluate forecast performance using:
+Realized: Benchmarking against actual 2024-2025 market performance.
 
-- **RMSE** (Root Mean Squared Error)
-- **MAPE** (Mean Absolute Percentage Error)
+...
 
----
+📌 Features
+✔ Interactive Dashboards: Dynamic ticker selection and forecast horizon sliders.
 
-## 📊 Portfolio Metrics
+✔ Comparative Frontiers: Visual Efficient Frontier analysis across different time windows.
 
-For each portfolio, we compute:
+✔ Accuracy Tracking: Live RMSE and MAPE metrics for forecast validation.
 
-- Annual Return
-- Annual Volatility
-- Sharpe Ratio
-- Sortino Ratio
-- Max Drawdown
+✔ Live Apps: Accessible via Streamlit Cloud for real-time interaction.
 
----
+...
 
-## 🧪 ARIMA Experiment
-
-As part of the exploration, ARIMA was also tested as an alternative forecasting method.  
-However, **ARIMA produced worse results than Prophet**, so Prophet was chosen for the final implementation.
-
----
-## 📦 Installation
-
-## Clone the Repository
-
-```bash
+📦 Installation & Run
+Bash
+# Clone the repository
 git clone https://github.com/esramogulkoc-dev/portfolio-forecasting
 cd portfolio-forecasting
 
-```bash
-pip install streamlit yfinance prophet scikit-learn scipy pandas numpy matplotlib pypfopt xgboost statsmodels
+# Install dependencies
+pip install -r requirements.txt
 
-🚀 Run the App
+# Run the Prophet Optimizer (Main App)
 streamlit run prophetfinal.py
 
+# Run the ARIMA Optimizer (Alternative)
+streamlit arimafinal.py
