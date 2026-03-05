@@ -3,6 +3,9 @@ yfinance
 pandas
 numpy
 plotly
-pycaret
 scipy
 cvxpy
+prophet
+scikit-learn
+matplotlib
+PyPortfolioOpt
