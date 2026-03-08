@@ -1,5 +1,8 @@
 # 📈 AI Portfolio Optimizer – Prophet
 
+⏱️Project Timeline
+   Duration: 4 Days
+
 ## 🌟 Quick Overview (STAR Method)
 
 **Situation:** Financial markets require both precise price prediction and robust risk management strategies.  
