@@ -47,11 +47,13 @@ def sharpe_annualized(returns, freq=252):
 
 def sortino_annualized(returns, freq=252, mar=0):
     mean = returns.mean() * freq
-    downside_std = returns[returns < mar].std() * np.sqrt(freq)
+    downside = returns[returns < mar]
+    downside_std = downside.std() * np.sqrt(freq)
     return mean / downside_std if downside_std != 0 else 0
 
 def max_drawdown(cum_returns):
-    return ((cum_returns - cum_returns.cummax()) / cum_returns.cummax()).min()
+    peak = cum_returns.cummax()
+    return ((cum_returns - peak) / peak).min()
 
 def make_returns(price):
     return np.log(price / price.shift(1)).dropna()
@@ -87,7 +89,8 @@ def rolling_prophet_price_forecast(price_series):
 def prophet_price_forecast_2026(price_series, start_date, horizon_months, last_known_price):
     returns = make_returns(price_series)
     model = train_prophet_return(returns)
-    future_dates = pd.bdate_range(start_date, pd.to_datetime(start_date) + pd.DateOffset(months=horizon_months-1))
+    future_end = pd.to_datetime(start_date) + pd.DateOffset(months=horizon_months-1)
+    future_dates = pd.bdate_range(start_date, future_end)
     future = pd.DataFrame({"ds": future_dates})
     ret_fc = model.predict(future)["yhat"].values
     prices = [last_known_price]
@@ -118,9 +121,9 @@ realized_close = get_data(tickers, TEST_START, TEST_END)
 
 # 2. HISTORICAL CHART
 st.subheader("1. Historical Performance (Base 100)")
-fig, ax = plt.subplots(figsize=(12,4))
-for t in tickers: ax.plot(df_close[t] / df_close[t].iloc[0] * 100, label=t)
-ax.legend(); ax.grid(alpha=0.3); st.pyplot(fig)
+fig1, ax1 = plt.subplots(figsize=(12,4))
+for t in tickers: ax1.plot(df_close[t] / df_close[t].iloc[0] * 100, label=t)
+ax1.legend(); ax1.grid(alpha=0.3); st.pyplot(fig1)
 
 # 3. RUN MODELS
 with st.spinner("AI is calculating forecasts..."):
@@ -135,11 +138,11 @@ with st.spinner("AI is calculating forecasts..."):
 # 4. FORECAST VS REALIZED
 st.header("2. 🔮 Forecast Analysis")
 for t in tickers:
-    fig, ax = plt.subplots(figsize=(12,4))
-    if not realized_close.empty: ax.plot(realized_close[t], label="Realized", color="black", linewidth=2)
-    ax.plot(rolling_forecast_df[t], label="24-25 Rolling FC", linestyle="--")
-    ax.plot(forecast_2026_df[t], label="2026 Future FC", linestyle=":")
-    ax.set_title(f"Prediction: {t}"); ax.legend(); ax.grid(alpha=0.2); st.pyplot(fig)
+    fig2, ax2 = plt.subplots(figsize=(12,4))
+    if not realized_close.empty: ax2.plot(realized_close[t], label="Realized", color="black", linewidth=2)
+    ax2.plot(rolling_forecast_df[t], label="24-25 Rolling FC", linestyle="--")
+    ax2.plot(forecast_2026_df[t], label="2026 Future FC", linestyle=":")
+    ax2.set_title(f"Prediction: {t}"); ax2.legend(); ax2.grid(alpha=0.2); st.pyplot(fig2)
 
 # 5. ACCURACY TABLE
 st.subheader("🎯 Accuracy (2024-2025 Rolling Forecast)")
@@ -154,7 +157,6 @@ st.dataframe(pd.DataFrame(acc_data).set_index("Ticker"))
 returns_hist = make_returns(df_close)
 returns_roll_fc = make_returns(rolling_forecast_df)
 returns_real = make_returns(realized_close)
-# 2026 Returns
 fc_2026_with_prev = pd.concat([realized_close.iloc[[-1]], forecast_2026_df])
 returns_fc_2026 = np.log(fc_2026_with_prev / fc_2026_with_prev.shift(1)).dropna()
 
@@ -164,7 +166,7 @@ w_fc_roll = optimize_portfolio(returns_roll_fc.mean().values, returns_roll_fc.co
 w_real = optimize_portfolio(returns_real.mean().values, returns_real.cov().values)
 w_fc_2026 = optimize_portfolio(returns_fc_2026.mean().values, returns_fc_2026.cov().values)
 
-# 7. WEIGHTS TABLE
+# 7. WEIGHTS TABLE (Yüzde Formatı)
 st.subheader("⚖️ Portfolio Weights")
 weights_df = pd.DataFrame({
     "Ticker": tickers,
@@ -173,9 +175,25 @@ weights_df = pd.DataFrame({
     "Realized 24-25 (%)": w_real * 100,
     "Forecast 2026 (%)": w_fc_2026 * 100
 }).set_index("Ticker")
-st.dataframe(weights_df.round(1).style.background_gradient(cmap="RdYlGn", axis=1))
+st.dataframe(weights_df.style.format("{:.1f}%").background_gradient(cmap="RdYlGn", axis=1))
 
-# 8. METRICS TABLE
+# 8. CUMULATIVE RETURNS CHART (Orijinal Grafik Eklendi)
+st.header("📈 Portfolio Cumulative Returns")
+
+cum_roll_fc = (1 + returns_roll_fc.dot(w_fc_roll)).cumprod()
+cum_real = (1 + returns_real.dot(w_real)).cumprod()
+cum_real_end_2025 = cum_real.iloc[-1] if not cum_real.empty else 1.0
+cum_fc_2026 = (1 + returns_fc_2026.dot(w_fc_2026)).cumprod() * cum_real_end_2025
+
+fig3, ax3 = plt.subplots(figsize=(12,6))
+ax3.plot(cum_roll_fc, label="Forecast Portfolio (2024-2025 Rolling)", linewidth=2)
+ax3.plot(cum_real, label="Historical Portfolio (2024-2025 Actual)", linewidth=2, linestyle="--")
+ax3.plot(cum_fc_2026, label="Forecast Portfolio (2026 Proj.)", linewidth=2, linestyle=":")
+ax3.set_title("Portfolio Cumulative Performance")
+ax3.legend(); ax3.grid(alpha=0.3)
+st.pyplot(fig3)
+
+# 9. METRICS TABLE
 st.subheader("📊 Portfolio Metrics")
 ann = 252
 m_list = []
