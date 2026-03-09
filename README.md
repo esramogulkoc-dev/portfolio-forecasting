@@ -97,6 +97,9 @@ streamlit run arimafinal.py
 You can access the live interactive dashboard here:  
 🔗 **[AI Portfolio Optimizer - Live on Streamlit Cloud](https://portfolio-forecasting-gnvtjputn5wnurzhlr8lxy.streamlit.app/)**
 
+![alt text](image-1.png)
+
 *Note: The app includes a hybrid data engine. If Yahoo Finance rate limits are triggered on the cloud server, it automatically fails over to the local `stockdate.csv` to ensure 100% uptime.*
 
-![alt text](app.png)
+
+
